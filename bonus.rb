@@ -1,22 +1,9 @@
 # To write a method that doesn't mutate variables just make new variable to hold onto new objects. This is safer since you won't accidently modify a variable being used elsewhere.
 
+# You can use a regex for also. I got the part \b(?<!['â`])[a-z] from http://apidock.com/rails/ActiveSupport/Inflector/titleize I then added a negative look ahead to ignore the words we want to leave downcase. This solution should run faster than my old one, albeit harder to read. I then upcase the first letter and add the rest of the string to ensure the first letter is capitalized no matter what. If we did not want this w could take out this line. 
 def titilize(string)
-  words = string.split(' ')
-  capital_words = []
-  words.each do |word|
-    capital_words << word.capitalize
-  end
-
-  title_words = []
-  title_words << capital_words[0]
-  for i in 1...capital_words.length
-    if capital_words[i] == "Or" || capital_words[i] == "From" || capital_words[i] == "To" || capital_words[i] == "And" || capital_words[i] == "In" || capital_words[i] == "The"
-      title_words[i] = capital_words[i].downcase
-    else
-      title_words[i] = capital_words[i]
-    end
-  end
-  title_words.join(' ')
+s = string.gsub(/(?!or|from|to|and|in|the|of)\b(?<!['])[a-z]/) { $&.capitalize }
+s[0].upcase + s[1..-1]
 end
 
 puts titilize("hello world")
